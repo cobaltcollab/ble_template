@@ -94,3 +94,24 @@ StateNotifierProvider<MapNotifier<K, V>, Map<K, V>> getMapStateNotifier<K, V>(
   return StateNotifierProvider<MapNotifier<K, V>, Map<K, V>>(
       (ref) => MapNotifier<K, V>(initialState: initialState));
 }
+
+/* Generic scalar notifier */
+
+// later all notifiers may be moved here
+class GenericNotifier<T> extends StateNotifier<T> {
+  GenericNotifier({required this.ref, required this.initialState})
+      : super(initialState);
+
+  final T initialState;
+  final StateNotifierProviderRef<GenericNotifier<T>, T> ref;
+
+  void set(T newValue) {
+    state = newValue;
+  }
+}
+
+StateNotifierProvider<GenericNotifier<T>, T> getGenericNotifier<T>(
+    T initialState) {
+  return StateNotifierProvider(
+      (ref) => GenericNotifier(ref: ref, initialState: initialState));
+}

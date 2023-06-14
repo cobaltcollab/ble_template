@@ -1,5 +1,13 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+// these are some wrappers to avoid boilerplate code.
+// three ready-to-use notifiers are added here, for
+// boolean values, generic lists and maps.
+// other types could be added on demand.
+// you can add other methods as well.
+// theme.dart and list_sample.dart for some examples
+
+/*  Boolean notifier  */
 class BooleanNotifier extends StateNotifier<bool> {
   BooleanNotifier(this.initialState) : super(initialState);
 
@@ -22,15 +30,18 @@ class BooleanNotifier extends StateNotifier<bool> {
   }
 }
 
+// this function returns a provider for boolean notifier
 StateNotifierProvider<BooleanNotifier, bool> getBoolStateNotifier(
     {bool initialValue = false}) {
   return StateNotifierProvider<BooleanNotifier, bool>(
       (ref) => BooleanNotifier(initialValue));
 }
 
+/*  List notifier  */
 class ListNotifier<T> extends StateNotifier<List<T>> {
   ListNotifier({this.initialState}) : super(initialState ?? []);
 
+  // pay attention to state immutability
   final List<T>? initialState;
   void add(T item) {
     state = [...state, item];
@@ -57,6 +68,7 @@ StateNotifierProvider<ListNotifier<T>, List<T>> getListStateNotifier<T>(
       (ref) => ListNotifier<T>(initialState: initialState));
 }
 
+/*  Map notifier  */
 class MapNotifier<K, V> extends StateNotifier<Map<K, V>> {
   MapNotifier({this.initialState}) : super(initialState ?? {});
 

@@ -1,5 +1,5 @@
 // this screen should wrap all other screens.
-// it containes the Scaffold
+// it containes the Scaffold, Appbar and the Bottombar
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

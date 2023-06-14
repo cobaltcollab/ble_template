@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_template/states/ble/ble_states.dart';
 import 'package:flutter_template/states/list_sample.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -9,42 +11,53 @@ class ListViewer extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sampleListState = ref.watch(sampleListStateProvider);
+    final bleStateProvider = ref.read(bleStackStateProvider.notifier);
+    final bleAppStateProvider = ref.read(bleAppProvider.notifier);
+    final bleAppState = ref.watch(bleAppProvider);
 
-    return SingleChildScrollView(
-      controller: ScrollController(),
-      child: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              addToList(ref);
-            },
-            child: const Text("Add to List"),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Center(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height / 2,
-              child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 1),
-                      borderRadius: const BorderRadius.all(Radius.circular(5))),
-                  width: MediaQuery.of(context).size.width / 2,
-                  // child: ListView(
-                  //     children: sampleListState.map((e) => Text(e)).toList())
-                  child: ListView.builder(
-                    itemCount: sampleListState.length,
-                    itemBuilder: (context, index) =>
-                        Text(sampleListState[index]),
-                  )),
+    return StreamBuilder(
+        stream: FlutterBluePlus.instance.state,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            switch (snapshot.data) {
+              case BluetoothState.off:
+                bleStateProvider.set(BLEStackStates.off);
+                bleAppStateProvider.set(BLEAppStates.bleUnavailable);
+
+                break;
+              case BluetoothState.on:
+                bleStateProvider.set(BLEStackStates.on);
+                bleAppStateProvider.set(BLEAppStates.readyToScan);
+
+                break;
+              case BluetoothState.unauthorized:
+                bleStateProvider.set(BLEStackStates.unauthorized);
+                bleAppStateProvider.set(BLEAppStates.bleUnavailable);
+
+                break;
+
+              default:
+                bleStateProvider.set(BLEStackStates.unknown);
+                bleAppStateProvider.set(BLEAppStates.bleUnavailable);
+
+                break;
+            }
+          }
+          if (snapshot.hasError) {
+            bleStateProvider.set(BLEStackStates.error);
+          }
+
+          return SingleChildScrollView(
+            controller: ScrollController(),
+            child: Column(
+              children: [
+                if (bleAppState == BLEAppStates.readyToScan)
+                  ElevatedButton(
+                      onPressed: () {}, child: const Text('ready to scan'))
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 }
 

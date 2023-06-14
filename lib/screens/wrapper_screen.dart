@@ -3,6 +3,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_template/states/ble/ble_states.dart';
+import 'package:flutter_template/states/ble/ble_utils.dart';
 import 'package:flutter_template/states/theme.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -16,10 +18,13 @@ class ParentScreen extends HookConsumerWidget {
     final darkModeState = ref.watch(darkModeStateProvider);
 
     final bottomIndex = useState<int>(0);
+
+    final bleState = ref.watch(bleStackStateProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('A Flutter Template App'),
         actions: [
+          getBLEStatusIcon(bleState),
           IconButton(
               onPressed: () {
                 darkModeProvider.toggle();

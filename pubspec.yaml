@@ -39,6 +39,8 @@ dependencies:
   flutter_hooks:
   flex_color_scheme: ^7.1.2
   beamer: ^1.5.5
+  flutter_blue_plus: ^1.5.2
+  permission_handler: ^10.3.0
   # flutter_blue_plus: ^1.5.2
 
 dev_dependencies:

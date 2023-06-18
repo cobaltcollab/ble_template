@@ -15,12 +15,16 @@ void main() async {
   var permToAskList = <Permission>[];
   for (var perm in permList) {
     final status = await perm.status;
+    debugPrint('${permList.indexOf(perm)},  ${status.name}');
     if (!(status.isGranted)) {
       permToAskList.add(perm);
     }
   }
 
-  await permToAskList.request();
+  debugPrint(permToAskList.toString());
+  if (permToAskList.isNotEmpty) {
+    await permToAskList.request();
+  }
 
   runApp(const ProviderScope(child: App()));
 }
